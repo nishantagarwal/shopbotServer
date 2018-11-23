@@ -54,7 +54,7 @@ app.post('/hrbotServer', function (req, res){
 	     msg = output ? output.substr(0,15) : "Could not understand you";
 	     console.log("in then:");
 	     console.log(msg);
-	     res.json(setResponse(res,msg,contextOut)); 
+	     return res.json(setResponse(res,msg,contextOut)); 
 	     
      }).catch((error)=>{msg = "Could not get any answer"});     
    }else{
