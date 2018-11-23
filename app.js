@@ -28,7 +28,7 @@ app.post('/hrbotServer', function (req, res){
       let phoneNumber = contexts["phone-number"];
       msg = "ab apna sawaal puch";
    }else{
-      if(contexts["phoneNum"]){
+      if(contexts["phone-number"]){
          msg = "sahi jaa rha hai";
       }else{
          msg = "bhaag yahaan se";
