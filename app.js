@@ -31,9 +31,18 @@ app.post('/hrbotServer', function (req, res){
     return contextsObject[name] = context;
   })
    console.log(intent);
+   let contextOut = contexts;
    if (intent == "askPhoneNum"){
       let phoneNumber = contextsObject["phone-number"];
       msg = "ab apna sawaal puch";
+      contextOut.push({
+              "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/products_ean_list",
+              "lifespanCount": 10,
+              "parameters": {
+                "EANList": products_ean_list,
+                "EANList.original": products_ean_list
+              }
+            })
    }else{
       if(contextsObject["phone-number"]){
          msg = "sahi jaa rha hai";
@@ -42,7 +51,7 @@ app.post('/hrbotServer', function (req, res){
       }
    }
    console.log(msg);
-   res.json(setResponse(res,msg,contexts)); 
+   res.json(setResponse(res,msg,contextOut)); 
 });
 
 function setResponse(res,msg,contexts){
