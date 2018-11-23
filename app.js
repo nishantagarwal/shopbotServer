@@ -38,8 +38,8 @@ app.post('/hrbotServer', function (req, res) {
     console.log(intent);
     let contextOut = contexts;
     if (intent == "askPhoneNum") {
-        let phoneNumber = req.body.queryResult.parameters["phone_number"];
-        console.log("phoneNumber", phoneNumber);
+        let phone_number = req.body.queryResult.parameters["phone_number"];
+        console.log("phoneNumber", phone_number);
         getCandidate(phone_number).then((output) => {
             msg = "The number you have given does not exist in our system. Please provide correct number.";
             if (output) {
@@ -48,8 +48,8 @@ app.post('/hrbotServer', function (req, res) {
                     "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/phone_number",
                     "lifespanCount": 10,
                     "parameters": {
-                        "phone_number": phoneNumber,
-                        "phone_number.original": phoneNumber
+                        "phone_number": phone_number,
+                        "phone_number.original": phone_number
                     }
                 });
             }
