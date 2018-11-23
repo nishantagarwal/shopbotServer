@@ -64,7 +64,8 @@ app.post('/hrbotServer', function (req, res) {
         });
     } else {
         if (contextsObject["phone_number"]) {
-            phone_number = contextsObject["phone_number"].parameters.phone_number
+            console.log(contextsObject["phone_number"]);
+            phone_number = contextsObject["phone_number"];//.parameters.phone_number
             if (intent == "interviewRounds") {
                 field = "INTERVIEW_ROUNDS";
                 getCandidateField(phone_number, field).then((output) => {
