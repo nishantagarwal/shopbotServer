@@ -39,17 +39,25 @@ app.post('/hrbotServer', function (req, res) {
     let contextOut = contexts;
     if (intent == "askPhoneNum") {
         let phoneNumber = req.body.queryResult.parameters["phone_number"];
-        console.log("phoneNumber",phoneNumber);
-        msg = "ab apna sawaal puch";
-        contextOut.push({
-            "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/phone_number",
-            "lifespanCount": 10,
-            "parameters": {
-                "phone_number": phoneNumber,
-                "phone_number.original": phoneNumber
+        console.log("phoneNumber", phoneNumber);
+        getCandidate(phone_number).then((output) => {
+            msg = "The number you have given does not exist in our system. Please provide correct number.";
+            if (output) {
+                msg = "Thank you for providing your number. How can I help you ?";
+                contextOut.push({
+                    "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/phone_number",
+                    "lifespanCount": 10,
+                    "parameters": {
+                        "phone_number": phoneNumber,
+                        "phone_number.original": phoneNumber
+                    }
+                });
             }
+            return res.json(setResponse(res, msg, contextOut));
+        }).catch((error) => {
+            msg = "Unable to validate your number. Please provide your number again.";
+            return res.json(setResponse(res, msg, contextOut));
         });
-        res.json(setResponse(res, msg, contextOut));
     } else if (intent == "Default Fallback Intent") {
         query = req.body.queryResult.queryText;
         console.log("Calling FAQ URL for text - " + query);
@@ -58,7 +66,6 @@ app.post('/hrbotServer', function (req, res) {
             console.log("in then:");
             console.log(msg);
             return res.json(setResponse(res, msg, contextOut));
-
         }).catch((error) => {
             msg = "Could not get any answer";
             return res.json(setResponse(res, msg, contextOut));
@@ -66,23 +73,26 @@ app.post('/hrbotServer', function (req, res) {
     } else {
         if (contextsObject["phone_number"]) {
             console.log(contextsObject["phone_number"]);
-            phone_number = contextsObject["phone_number"];//.parameters.phone_number
-            if (intent == "interviewRounds") {
-                field = "INTERVIEW_ROUNDS";
-                getCandidateField(phone_number, field).then((output) => {
-                    msg = output ? "There will be total of " + output + " rounds" : "Could not understand you";
-                    console.log(msg);
-                    return res.json(setResponse(res, msg, contextOut));
-                }).catch((error) => {
-                    msg = "Could not get any answer";
-                    return res.json(setResponse(res, msg, contextOut));
-                });
-            } else {
-                msg = "bhaag yahaan se";
-                res.json(setResponse(res, msg, contextOut));
-            }
+            phone_number = contextsObject.phone_number.parameters.phone_number
+            getCandidate(phone_number).then((output) => {
+                msg = "The number you have given does not exist in our system. Please provide correct number.";
+                if (output) {
+                    msg = "Thank you for providing your number. How can I help you ?";
+                    contextOut.push({
+                        "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/phone_number",
+                        "lifespanCount": 10,
+                        "parameters": {
+                            "phone_number": phoneNumber,
+                            "phone_number.original": phoneNumber
+                        }
+                    });
+                }
+                return res.json(setResponse(res, msg, contextOut));
+            }).catch((error) => {
+                msg = "Unable to validate your number. Please provide your number again.";
+                return res.json(setResponse(res, msg, contextOut));
+            });
         }
-
     }
 });
 
@@ -148,7 +158,7 @@ function callFAQ(query) {
     });
 }
 
-function getCandidateField(phoneNum, field) {
+function getCandidate(phoneNum) {
     reqUrl = rest_url + "/phone?phone=" + phoneNum;
 
     return new Promise((resolve, reject) => {
@@ -160,12 +170,12 @@ function getCandidateField(phoneNum, field) {
             if (!error && response.statusCode == 200) {
                 let response = JSON.stringify(body);
                 if (response.length == 0) {
-                    resolve(record[field]);
+                    resolve(null);
                 } else {
                     record = response[0];
                     console.log("REST Response:");
                     console.log(response);
-                    resolve(record.field);
+                    resolve(record);
                 }
             } else {
                 console.error("REST error -> ", error);
