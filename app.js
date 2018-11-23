@@ -34,7 +34,8 @@ app.post('/hrbotServer', function (req, res){
          msg = "bhaag yahaan se";
       }
    }
-   setResponse(res,msg,contexts); 
+   console.log(msg);
+   res.json(setResponse(res,msg,contexts)); 
 });
 
 function setResponse(res,msg,contexts){
@@ -51,5 +52,5 @@ function setResponse(res,msg,contexts){
          ],
          "outputContexts": contexts
       }
-   res.json(responseObj);
+   return responseObj;
 }
