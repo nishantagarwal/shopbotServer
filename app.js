@@ -168,7 +168,7 @@ function getCandidate(phoneNum) {
             method: "GET"
         }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                let response = JSON.stringify(body);
+                let response = JSON.parse(body);
                 if (response.length == 0) {
                     resolve(null);
                 } else {
