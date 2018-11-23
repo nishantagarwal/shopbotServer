@@ -7,6 +7,7 @@ const pg = require('pg');
 const client = new pg.Client('postgres://cnhxuafc:gK3OWnFKJe1vd3eBTqWwp4PhtLjZyhEI@pellefant.db.elephantsql.com:5432/cnhxuafc');
 client.connect();
 const faq_url = "https://faq-solr.herokuapp.com/search?query=";
+const rest_url = "https://kamariya.herokuapp.com/candidate";
 
 var app = express();
 app.use(bodyParser.json());
@@ -63,11 +64,21 @@ app.post('/hrbotServer', function (req, res){
 		       });     
    }else{
       if(contextsObject["phone_number"]){
-         msg = "sahi jaa rha hai";
+         phone_number = contextsObject["phone_number"]
+	 if(intent == "interviewRounds"){
+		 field = "INTERVIEW_ROUNDS";
+		 getCandidateField(query).then((output)=>{
+	     msg = output ? "There will be total of " + output + " rounds" : "Could not understand you";
+	     console.log(msg);
+		     return res.json(setResponse(res,msg,contextOut)); 	     
+	     }).catch((error)=>{
+		     msg = "Could not get any answer";
+		     return res.json(setResponse(res,msg,contextOut)); 
+			       });
       }else{
          msg = "bhaag yahaan se"; 
-      }
 	   res.json(setResponse(res,msg,contextOut)); 
+      }
    }
    
 });
@@ -134,4 +145,33 @@ function callFAQ (query) {
             }
           );
   });
+}
+
+function getCandidateField(phoneNum, field){
+	reqUrl = rest_url + "/phone?phone=" + phoneNum;
+	
+  return new Promise((resolve, reject) => {
+	  reqUrl = faq_url + encodeURI(query);
+	  console.log(reqUrl);
+    request({
+              url: reqUrl,
+              method: "GET"
+            }, function (error, response, body){
+              if (!error && response.statusCode == 200) {
+                let response = JSON.stringify(body);
+		if(response.length == 0){
+		    resolve(record.field);
+		}else{
+			record = response[0];
+			console.log("REST Response:");
+			console.log(response);
+			resolve(record.field);
+		}
+              }else{
+                console.error("REST error -> ",error);
+                reject(error)
+              }
+            }
+          );
+  });	
 }
