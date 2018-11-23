@@ -3,6 +3,7 @@ var bodyParser = require('body-parser')
 const nconf = require('nconf');
 const http = require('http');
 var request = require('request');
+const pg = require('pg');
 const client = new pg.Client('postgres://cnhxuafc:gK3OWnFKJe1vd3eBTqWwp4PhtLjZyhEI@pellefant.db.elephantsql.com:5432/cnhxuafc');
 client.connect();
 
