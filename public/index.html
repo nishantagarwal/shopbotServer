@@ -1,0 +1,61 @@
+<html ng-app="tbd_app">
+	<head>
+		<title>TBD</title>	
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="vendors/bootstrap/bootstrap.min.css">
+
+		<script src="vendors/jquery/jquery-3.3.1.js"></script>
+		<script src="vendors/bootstrap/bootstrap.min.js"></script>
+		<script src="vendors/angularjs/angular.js"></script>
+	</head>
+	<body>
+		<h2>TBD</h2>
+		<div class="container" ng-controller="rescheduleController">
+			<table class="table table-striped">
+				<tr>
+					<th>Select</th>
+					<th>Name</th>
+					<th>Email ID</th>
+					<th>Phone Number</th>
+					<th>Interview Status</th>
+					<th>Interview Result</th>
+					<th>Interview Date</th>
+				</tr>
+				<tr ng-repeat="candidate in candidateData">
+					<td><input type="checkbox" ng-model="candidate.trigger" /></td>
+					<td>{{candidate.NAME}}</td>
+					<td>{{candidate.EMAIL_ID}}</td>
+					<td>{{candidate.PHONE_NUMBER}}</td>
+					<td>{{candidate.INTERVIEW_STATUS}}</td>
+					<td>{{candidate.INTERVIEW_RESULT}}</td>
+					<td>{{candidate.INTERVIEW_DATE_TIME}}</td>
+				</tr>
+			</table>
+			<br/><button ng-click="triggerAction()">Trigger</button>
+		</div>
+	</body>	
+	<script>
+		var app=angular.module("tbd_app",[]);
+		
+		app.controller("rescheduleController", function($scope, $http) {
+			var loadCandidateData = function() {
+				$http.get("/candidates").then(function(response){
+					$scope.candidateData = response.data;
+				});
+			}
+			
+			$scope.triggerAction = function() {
+				result = []
+				angular.forEach($scope.candidateData, function(candidate) {
+					if (candidate.trigger == true) {
+						result.push(candidate.ID);
+					}
+				});
+				$http.post("/candidates/trigger", result).then(function(response){
+					alert("Reschedule process has been triggered");
+				});
+			}
+			loadCandidateData();
+		})
+	</script>
+</html>
