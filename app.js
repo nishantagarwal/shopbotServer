@@ -51,9 +51,12 @@ app.post('/hrbotServer', function (req, res){
      query = req.body.queryResult.queryText;
 	console.log("Calling FAQ URL for text - " + query);
      callFAQ(query).then((output)=>{
-	     msg = output;
+	     msg = output ? output.substr(0,15) : "Could not understand you";
 	     console.log("in then:");
-	     console.log(output);}).catch((error)=>{msg = "Could not get any answer"});     
+	     console.log(msg);
+	     res.json(setResponse(res,msg,contextOut)); 
+	     
+     }).catch((error)=>{msg = "Could not get any answer"});     
    }else{
       if(contextsObject["phone_number"]){
          msg = "sahi jaa rha hai";
