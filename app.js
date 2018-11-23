@@ -50,7 +50,10 @@ app.post('/hrbotServer', function (req, res){
    }else if(intent == "Default Fallback Intent"){
      query = req.body.queryResult.queryText;
 	console.log("Calling FAQ URL for text - " + query);
-     callFAQ(query).then((output)=>{msg = output}).catch((error)=>{msg = "Could not get any answer"});     
+     callFAQ(query).then((output)=>{
+	     msg = output;
+	     console.log("in then:");
+	     console.log(output);}).catch((error)=>{msg = "Could not get any answer"});     
    }else{
       if(contextsObject["phone_number"]){
          msg = "sahi jaa rha hai";
