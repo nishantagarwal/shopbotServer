@@ -3,15 +3,8 @@ var bodyParser = require('body-parser')
 const nconf = require('nconf');
 const http = require('http');
 var request = require('request');
-const { Client } = require('pg');
-
-const client = new Client({
-  user: 'cnhxuafc',
-  host: 'pellefant.db.elephantsql.com',
-  database: 'cnhxuafc',
-  password: 'gK3OWnFKJe1vd3eBTqWwp4PhtLjZyhEI',
-  port: 5432,
-})
+const client = new pg.Client('postgres://cnhxuafc:gK3OWnFKJe1vd3eBTqWwp4PhtLjZyhEI@pellefant.db.elephantsql.com:5432/cnhxuafc');
+client.connect();
 
 var app = express();
 app.use(bodyParser.json());
@@ -65,13 +58,25 @@ app.post('/hrbotServer', function (req, res){
 
 app.get('/candidates', function (req, res) {
    console.log("Got a GET request for the candidates");
-   const text = 'SELECT "NAME" FROM "CANDIDATE";'
-   client.query(text, (err, response) => {
+   client.query('SELECT * FROM "CANDIDATE";', (err, response) => {
      if (err) {
-       console.log(err.stack)
+       console.log(err.stack);
      } else {
-       get_res = console.log(response)
-       res.end(get_res);
+	   console.log(response.rows);
+       res.json(response.rows);
+     }
+   })
+});
+
+app.get('/candidate/phone', function (req, res) {
+   console.log("Got a GET request for a candidate using phone number");
+   query_phone = req.query.phone;
+   client.query('SELECT * FROM "CANDIDATE" WHERE "PHONE_NUMBER" = ' + query_phone + ';', (err, response) => {
+     if (err) {
+       console.log(err.stack);
+     } else {
+	   console.log(response.rows);
+       res.json(response.rows);
      }
    })
 });
