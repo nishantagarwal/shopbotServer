@@ -150,7 +150,6 @@ function getCandidateField(phoneNum, field) {
     reqUrl = rest_url + "/phone?phone=" + phoneNum;
 
     return new Promise((resolve, reject) => {
-        reqUrl = faq_url + encodeURI(query);
         console.log(reqUrl);
         request({
             url: reqUrl,
