@@ -3,6 +3,15 @@ var bodyParser = require('body-parser')
 const nconf = require('nconf');
 const http = require('http');
 var request = require('request');
+const { Client } = require('pg');
+
+const client = new Pool({
+  user: 'cnhxuafc',
+  host: 'pellefant.db.elephantsql.com',
+  database: 'cnhxuafc',
+  password: 'gK3OWnFKJe1vd3eBTqWwp4PhtLjZyhEI',
+  port: 5432,
+})
 
 var app = express();
 app.use(bodyParser.json());
@@ -52,6 +61,19 @@ app.post('/hrbotServer', function (req, res){
    }
    console.log(msg);
    res.json(setResponse(res,msg,contextOut)); 
+});
+
+app.get('/candidates', function (req, res) {
+   console.log("Got a GET request for the homepage");
+   const text = 'SELECT "NAME" FROM "CANDIDATE"'
+   client.query(text, (err, response) => {
+     if (err) {
+       console.log(err.stack)
+     } else {
+       get_res = console.log(response)
+     }
+   })
+   res.end(get_res);
 });
 
 function setResponse(res,msg,contexts){
