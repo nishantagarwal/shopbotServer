@@ -22,9 +22,10 @@ app.post('/hrbotServer', function (req, res){
    console.log(req.body.queryResult);
    let intent = req.body.queryResult.intent['displayName'];
    let contexts = req.body.queryResult.outputContexts ? req.body.queryResult.outputContexts : [];
-   let msg= "";
+   let msg= "1234";
+   console.log(intent);
    if (intent == "askPhoneNum"){
-      phoneNumber = contexts["phone-number"];
+      let phoneNumber = contexts["phone-number"];
       msg = "ab apna sawaal puch";
    }else{
       if(contexts["phoneNum"]){
@@ -33,10 +34,10 @@ app.post('/hrbotServer', function (req, res){
          msg = "bhaag yahaan se";
       }
    }
-   setResponse(res,msg); 
+   setResponse(res,msg,contexts); 
 });
 
-function setResponse(res,msg){
+function setResponse(res,msg,contexts){
    let responseObj={
          "fulfillmentText":msg,
          "fulfillmentMessages":[
@@ -47,7 +48,8 @@ function setResponse(res,msg){
                   ]
                }
             }
-         ]
+         ],
+         "outputContexts": contexts
       }
    res.json(responseObj);
 }
