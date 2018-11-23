@@ -38,14 +38,15 @@ app.post('/hrbotServer', function (req, res) {
     console.log(intent);
     let contextOut = contexts;
     if (intent == "askPhoneNum") {
-        let phoneNumber = contextsObject["phone_number"];
+        let phoneNumber = req.body.queryResult.parameters["phone_number"];
+        console.log("phoneNumber",phoneNumber);
         msg = "ab apna sawaal puch";
         contextOut.push({
             "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/phone_number",
             "lifespanCount": 10,
             "parameters": {
-                "phone_number123": phoneNumber,
-                "phone_number123.original": phoneNumber
+                "phone_number": phoneNumber,
+                "phone_number.original": phoneNumber
             }
         });
         res.json(setResponse(res, msg, contextOut));
