@@ -46,7 +46,8 @@ app.post('/hrbotServer', function (req, res){
                 "phone_number": phoneNumber,
                 "phone_number.original": phoneNumber
               }
-            })
+            });
+	   res.json(setResponse(res,msg,contextOut)); 
    }else if(intent == "Default Fallback Intent"){
      query = req.body.queryResult.queryText;
 	console.log("Calling FAQ URL for text - " + query);
@@ -56,16 +57,19 @@ app.post('/hrbotServer', function (req, res){
 	     console.log(msg);
 	     return res.json(setResponse(res,msg,contextOut)); 
 	     
-     }).catch((error)=>{msg = "Could not get any answer"});     
+     }).catch((error)=>{
+	     msg = "Could not get any answer";
+	     return res.json(setResponse(res,msg,contextOut)); 
+		       });     
    }else{
       if(contextsObject["phone_number"]){
          msg = "sahi jaa rha hai";
       }else{
-         msg = "bhaag yahaan se";
+         msg = "bhaag yahaan se"; 
       }
+	   res.json(setResponse(res,msg,contextOut)); 
    }
-   console.log(msg);
-   res.json(setResponse(res,msg,contextOut)); 
+   
 });
 
 app.get('/candidates', function (req, res) {
