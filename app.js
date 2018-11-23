@@ -82,13 +82,13 @@ app.post('/hrbotServer', function (req, res) {
                 } else {
                     switch (intent) {
                         case "interviewRounds":
-                            msg = "There will be " + output["INTERVIEW_ROUNDS"] + "rounds";
+                            msg = "There will be " + output["INTERVIEW_ROUNDS"] + " rounds";
                             break;
                         case "interviewTypes":
-                            msg = "There types of interview rounds are - " + output["INTERVIEW_TYPES"];
+                            msg = "Types of interview are " + output["INTERVIEW_TYPES"];
                             break;
                         case "interviewResult":
-                            msg = "There types of interview rounds are - " + output["INTERVIEW_RESULT"];
+                            msg = "There result of interview is " + output["INTERVIEW_RESULT"];
                             break;
                         case "officeAddress":
                             msg = output["OFFICE_ADDRESS"];
@@ -98,6 +98,9 @@ app.post('/hrbotServer', function (req, res) {
                             break;
                         case "docSubmissionTime":
                             msg = output["SUBMISSION_TIME"];
+                            break;
+                        default:
+                            msg = "Sorry we do not have this information.";
                             break;
                     }
                 }
@@ -111,59 +114,59 @@ app.post('/hrbotServer', function (req, res) {
 });
 
 app.get('/candidates', function (req, res) {
-   console.log("Got a GET request for the candidates");
-   query = 'SELECT * FROM "CANDIDATE";';
-   client.query(query, (err, response) => {
-     if (err) {
-       console.log(err.stack);
-     } else {
-	   console.log(response.rows);
-       res.json(response.rows);
-     }
-   })
+    console.log("Got a GET request for the candidates");
+    query = 'SELECT * FROM "CANDIDATE";';
+    client.query(query, (err, response) => {
+        if (err) {
+            console.log(err.stack);
+        } else {
+            console.log(response.rows);
+            res.json(response.rows);
+        }
+    })
 });
 
 app.get('/candidate/phone', function (req, res) {
-   console.log("Got a GET request for a candidate using phone number");
-   query_phone = req.query.phone;
-   query = 'SELECT * FROM "CANDIDATE" WHERE "PHONE_NUMBER" = ' + query_phone + ';';
-   client.query(query, (err, response) => {
-     if (err) {
-       console.log(err.stack);
-     } else {
-	   console.log(response.rows);
-       res.json(response.rows);
-     }
-   })
+    console.log("Got a GET request for a candidate using phone number");
+    query_phone = req.query.phone;
+    query = 'SELECT * FROM "CANDIDATE" WHERE "PHONE_NUMBER" = ' + query_phone + ';';
+    client.query(query, (err, response) => {
+        if (err) {
+            console.log(err.stack);
+        } else {
+            console.log(response.rows);
+            res.json(response.rows);
+        }
+    })
 });
 
 app.post('/candidates/trigger', function (req, res) {
-   console.log("Got a POST request for trigger");
-   triggered_candidates = req.body;
-   for (index in triggered_candidates) {
-	  query = 'INSERT INTO "CANDIDATE_HR" VALUES (' + triggered_candidates[index] + ', 123)'
-	  client.query(query, (err, response) => {
-  	     if (err) {
-	        console.log(err.stack);
-	     } else {
-	        console.log(response);
-	     }
-      })
+    console.log("Got a POST request for trigger");
+    triggered_candidates = req.body;
+    for (index in triggered_candidates) {
+        query = 'INSERT INTO "CANDIDATE_HR" VALUES (' + triggered_candidates[index] + ', 123)'
+        client.query(query, (err, response) => {
+            if (err) {
+                console.log(err.stack);
+            } else {
+                console.log(response);
+            }
+        })
     }
-   res.json({});
+    res.json({});
 });
 
 app.get('/candidates/triggered', function (req, res) {
-   console.log("Got a GET request for a triggered candidates");
-   query = 'SELECT * FROM "CANDIDATE_HR";';
-   client.query(query, (err, response) => {
-     if (err) {
-       console.log(err.stack);
-     } else {
-	   console.log(response.rows);
-       res.json(response.rows);
-     }
-   })
+    console.log("Got a GET request for a triggered candidates");
+    query = 'SELECT * FROM "CANDIDATE_HR";';
+    client.query(query, (err, response) => {
+        if (err) {
+            console.log(err.stack);
+        } else {
+            console.log(response.rows);
+            res.json(response.rows);
+        }
+    })
 });
 
 function setResponse(res, msg, contexts) {
