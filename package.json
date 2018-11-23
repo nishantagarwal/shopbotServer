@@ -16,7 +16,7 @@
     "actions-on-google": "^1.8.2",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "pg": "^10.0",
+    "pg": "^7.6.1",
     "nconf": "^0.10.0",
     "request": "^2.83.0"
   }
