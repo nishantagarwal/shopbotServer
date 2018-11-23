@@ -6,6 +6,7 @@ var request = require('request');
 const pg = require('pg');
 const client = new pg.Client('postgres://cnhxuafc:gK3OWnFKJe1vd3eBTqWwp4PhtLjZyhEI@pellefant.db.elephantsql.com:5432/cnhxuafc');
 client.connect();
+const faq_url = "https://faq-solr.herokuapp.com/search?query=";
 
 var app = express();
 app.use(bodyParser.json());
@@ -46,6 +47,9 @@ app.post('/hrbotServer', function (req, res){
                 "phone_number.original": phoneNumber
               }
             })
+   }else if(intent == "Default Fallback Intent"){
+     query = req.body.queryResult.queryText;
+     callQnA(query).then((output)=>{msg = output}).catch((error)=>{msg = "Could not get any answer"});     
    }else{
       if(contextsObject["phone_number"]){
          msg = "sahi jaa rha hai";
@@ -97,4 +101,22 @@ function setResponse(res,msg,contexts){
          "outputContexts": contexts
       }
    return responseObj;
+}
+
+function callQnA (query) {
+  return new Promise((resolve, reject) => {
+    request({
+              url: qnaUrl + encodeURI(query),
+              method: "GET"
+            }, function (error, response, body){
+              if (!error && response.statusCode == 200) {
+                let response = body;
+                resolve(response);
+              }else{
+                console.error("QnA error -> ",error);
+                reject(error)
+              }
+            }
+          );
+  });
 }
