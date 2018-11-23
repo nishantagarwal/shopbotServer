@@ -64,16 +64,16 @@ app.post('/hrbotServer', function (req, res){
 });
 
 app.get('/candidates', function (req, res) {
-   console.log("Got a GET request for the homepage");
+   console.log("Got a GET request for the candidates");
    const text = 'SELECT "NAME" FROM "CANDIDATE"'
    client.query(text, (err, response) => {
      if (err) {
        console.log(err.stack)
      } else {
        get_res = console.log(response)
+       res.end(get_res);
      }
    })
-   res.end(get_res);
 });
 
 function setResponse(res,msg,contexts){
