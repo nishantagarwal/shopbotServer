@@ -159,7 +159,7 @@ function getCandidateField(phoneNum, field) {
             if (!error && response.statusCode == 200) {
                 let response = JSON.stringify(body);
                 if (response.length == 0) {
-                    resolve(record.field);
+                    resolve(record[field]);
                 } else {
                     record = response[0];
                     console.log("REST Response:");
