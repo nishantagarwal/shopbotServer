@@ -67,7 +67,7 @@ app.post('/hrbotServer', function (req, res) {
             phone_number = contextsObject["phone_number"]
             if (intent == "interviewRounds") {
                 field = "INTERVIEW_ROUNDS";
-                getCandidateField(query).then((output) => {
+                getCandidateField(phone_number, field).then((output) => {
                     msg = output ? "There will be total of " + output + " rounds" : "Could not understand you";
                     console.log(msg);
                     return res.json(setResponse(res, msg, contextOut));
