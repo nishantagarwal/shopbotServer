@@ -5,7 +5,7 @@ const http = require('http');
 var request = require('request');
 const { Client } = require('pg');
 
-const client = new Pool({
+const client = new Client({
   user: 'cnhxuafc',
   host: 'pellefant.db.elephantsql.com',
   database: 'cnhxuafc',
