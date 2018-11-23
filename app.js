@@ -19,7 +19,7 @@ console.log('API server listening on port: 3000 or ', process.env.PORT)
 })
 
 app.post('/hrbotServer', function (req, res){
-   console.log(req.body);
+   console.log(req.body.originalDetectIntentRequest.payload.telephony);
    res.setHeader('Content-Type', 'application/json');
           let msg = "Not able to find specified Product from last searched list of products.Say again like - 'open product second'.";
           let responseObj={
