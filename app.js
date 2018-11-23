@@ -33,18 +33,18 @@ app.post('/hrbotServer', function (req, res){
    console.log(intent);
    let contextOut = contexts;
    if (intent == "askPhoneNum"){
-      let phoneNumber = contextsObject["phone-number"];
+      let phoneNumber = contextsObject["phoneNumber"];
       msg = "ab apna sawaal puch";
       contextOut.push({
-              "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/products_ean_list",
+              "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/phoneNumber",
               "lifespanCount": 10,
               "parameters": {
-                "EANList": products_ean_list,
-                "EANList.original": products_ean_list
+                "phoneNum": phoneNumber,
+                "phoneNumber.original": phoneNumber
               }
             })
    }else{
-      if(contextsObject["phone-number"]){
+      if(contextsObject["phoneNumber"]){
          msg = "sahi jaa rha hai";
       }else{
          msg = "bhaag yahaan se";
