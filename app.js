@@ -19,19 +19,35 @@ console.log('API server listening on port: 3000 or ', process.env.PORT)
 })
 
 app.post('/hrbotServer', function (req, res){
-   res.setHeader('Content-Type', 'application/json');
-          let msg = "Not able to find specified Product from last searched list of products.Say again like - 'open product second'.";
-          let responseObj={
-               "fulfillmentText":msg,
-               "fulfillmentMessages":[
-                  {
-                      "text": {
-                          "text": [
-                              msg
-                          ]
-                      }
-                  }
-              ]
-          }
-          res.json(responseObj);
+   console.log(req.body.queryResult);
+   let intent = req.body.queryResult.intent['displayName'];
+   let contexts = req.body.queryResult.outputContexts ? req.body.queryResult.outputContexts : [];
+   let msg= "";
+   if (intent == "askPhoneNum"){
+      phoneNumber = contexts["phone-number"];
+      msg = "ab apna sawaal puch";
+   }else{
+      if(contexts["phoneNum"]){
+         msg = "sahi jaa rha hai";
+      }else{
+         msg = "bhaag yahaan se";
+      }
+   }
+   setResponse(res,msg); 
 });
+
+function setResponse(res,msg){
+   let responseObj={
+         "fulfillmentText":msg,
+         "fulfillmentMessages":[
+            {
+               "text": {
+               "text": [
+                  msg
+                  ]
+               }
+            }
+         ]
+      }
+   res.json(responseObj);
+}
