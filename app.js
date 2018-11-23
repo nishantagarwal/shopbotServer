@@ -17,3 +17,10 @@ app.get('/', function (req, res) {
 var server = app.listen(process.env.PORT || 3000, function() {
 console.log('API server listening on port: 3000 or ', process.env.PORT)
 })
+
+app.post('/hrbotServer', function (req, res){
+   console.log(req.body.queryResult.intent);
+   res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({ 'speech': "Not able to find Switch Case for this Intent",
+                                'displayText': "Not able to find Switch Case for this Intent" })); 
+});
