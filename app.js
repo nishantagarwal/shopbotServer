@@ -49,6 +49,7 @@ app.post('/hrbotServer', function (req, res){
             })
    }else if(intent == "Default Fallback Intent"){
      query = req.body.queryResult.queryText;
+	console.log("Calling QnA URL for text - " + query);
      callQnA(query).then((output)=>{msg = output}).catch((error)=>{msg = "Could not get any answer"});     
    }else{
       if(contextsObject["phone_number"]){
