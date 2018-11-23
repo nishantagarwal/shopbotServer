@@ -21,6 +21,18 @@ console.log('API server listening on port: 3000 or ', process.env.PORT)
 app.post('/hrbotServer', function (req, res){
    console.log(req.body.queryResult.intent);
    res.setHeader('Content-Type', 'application/json');
-  res.json({ 'speech': "Not able to find Switch Case for this Intent",
-                                'displayText': "Not able to find Switch Case for this Intent" }); 
+          let msg = "Not able to find specified Product from last searched list of products.Say again like - 'open product second'.";
+          let responseObj={
+               "fulfillmentText":msg,
+               "fulfillmentMessages":[
+                  {
+                      "text": {
+                          "text": [
+                              msg
+                          ]
+                      }
+                  }
+              ]
+          }
+          res.json(responseObj);
 });
