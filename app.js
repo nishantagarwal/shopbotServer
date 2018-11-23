@@ -22,13 +22,20 @@ app.post('/hrbotServer', function (req, res){
    console.log(req.body.queryResult);
    let intent = req.body.queryResult.intent['displayName'];
    let contexts = req.body.queryResult.outputContexts ? req.body.queryResult.outputContexts : [];
-   let msg= "1234";
+   console.log("contexts");
+   console.log(contexts);
+   let msg= "default msg", contextsObject = {};
+   contexts.map(context => {
+    let contextName = context.name,
+      name = contextName.split("/")[contextName.split("/").length - 1]
+    return contextsObject[name] = context;
+  })
    console.log(intent);
    if (intent == "askPhoneNum"){
-      let phoneNumber = contexts["phone-number"];
+      let phoneNumber = contextsObject["phone-number"];
       msg = "ab apna sawaal puch";
    }else{
-      if(contexts["phone-number"]){
+      if(contextsObject["phone-number"]){
          msg = "sahi jaa rha hai";
       }else{
          msg = "bhaag yahaan se";
