@@ -11,7 +11,12 @@ const rest_url = "https://kamariya.herokuapp.com/candidate";
 
 var app = express();
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/public'));
+
+// This responds with "Hello" on the homepage
+app.get('/', function (req, res) {
+    console.log("Got a GET request for the homepage");
+    res.end('Hello from Home Page');
+});
 
 var server = app.listen(process.env.PORT || 3000, function () {
     console.log('API server listening on port: 3000 or ', process.env.PORT)
@@ -70,17 +75,30 @@ app.post('/hrbotServer', function (req, res) {
             console.log(contextsObject["phone_number"]);
             phone_number = contextsObject.phone_number.parameters.phone_number
             getCandidate(phone_number).then((output) => {
-                msg = "The number you have given does not exist in our system. Please provide correct number.";
-                if (output) {
-                    msg = "Thank you for providing your number. How can I help you ?";
-                    contextOut.push({
-                        "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/phone_number",
-                        "lifespanCount": 10,
-                        "parameters": {
-                            "phone_number": phoneNumber,
-                            "phone_number.original": phoneNumber
-                        }
-                    });
+                msg = "";
+                if (!output) {
+                    msg = "We are unable to fetch required information.";
+                } else {
+                    switch (intent) {
+                        case "interviewRounds":
+                            msg = "There will be " + output["INTERVIEW_ROUNDS"] + "rounds";
+                            break;
+                        case "interviewTypes":
+                            msg = "There types of interview rounds are - " + output["INTERVIEW_TYPES"];
+                            break;
+                        case "interviewResult":
+                            msg = "There types of interview rounds are - " + output["INTERVIEW_RESULT"];
+                            break;
+                        case "officeAddress":
+                            msg = output["OFFICE_ADDRESS"];
+                            break;
+                        case "requiredDocs":
+                            msg = output["REQUIRED_DOCS"];
+                            break;
+                        case "docSubmissionTime":
+                            msg = output["SUBMISSION_TIME"];
+                            break;
+                    }
                 }
                 return res.json(setResponse(res, msg, contextOut));
             }).catch((error) => {
@@ -92,59 +110,28 @@ app.post('/hrbotServer', function (req, res) {
 });
 
 app.get('/candidates', function (req, res) {
-   console.log("Got a GET request for the candidates");
-   query = 'SELECT * FROM "CANDIDATE";';
-   client.query(query, (err, response) => {
-     if (err) {
-       console.log(err.stack);
-     } else {
-	   console.log(response.rows);
-       res.json(response.rows);
-     }
-   })
+    console.log("Got a GET request for the candidates");
+    client.query('SELECT * FROM "CANDIDATE";', (err, response) => {
+        if (err) {
+            console.log(err.stack);
+        } else {
+            console.log(response.rows);
+            res.json(response.rows);
+        }
+    })
 });
 
 app.get('/candidate/phone', function (req, res) {
-   console.log("Got a GET request for a candidate using phone number");
-   query_phone = req.query.phone;
-   query = 'SELECT * FROM "CANDIDATE" WHERE "PHONE_NUMBER" = ' + query_phone + ';';
-   client.query(query, (err, response) => {
-     if (err) {
-       console.log(err.stack);
-     } else {
-	   console.log(response.rows);
-       res.json(response.rows);
-     }
-   })
-});
-
-app.post('/candidates/trigger', function (req, res) {
-   console.log("Got a POST request for trigger");
-   triggered_candidates = req.body;
-   for (index in triggered_candidates) {
-	  query = 'INSERT INTO "CANDIDATE_HR" VALUES (' + triggered_candidates[index] + ', 123)'
-	  client.query(query, (err, response) => {
-  	     if (err) {
-	        console.log(err.stack);
-	     } else {
-	        console.log(response);
-	     }
-      })
-    }
-   res.json({});
-});
-
-app.get('/candidates/triggered', function (req, res) {
-   console.log("Got a GET request for a triggered candidates");
-   query = 'SELECT * FROM "CANDIDATE_HR";';
-   client.query(query, (err, response) => {
-     if (err) {
-       console.log(err.stack);
-     } else {
-	   console.log(response.rows);
-       res.json(response.rows);
-     }
-   })
+    console.log("Got a GET request for a candidate using phone number");
+    query_phone = req.query.phone;
+    client.query('SELECT * FROM "CANDIDATE" WHERE "PHONE_NUMBER" = ' + query_phone + ';', (err, response) => {
+        if (err) {
+            console.log(err.stack);
+        } else {
+            console.log(response.rows);
+            res.json(response.rows);
+        }
+    })
 });
 
 function setResponse(res, msg, contexts) {
