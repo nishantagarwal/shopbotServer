@@ -44,8 +44,8 @@ app.post('/hrbotServer', function (req, res) {
             "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/phone_number",
             "lifespanCount": 10,
             "parameters": {
-                "phone_number": phoneNumber,
-                "phone_number.original": phoneNumber
+                "phone_number123": phoneNumber,
+                "phone_number123.original": phoneNumber
             }
         });
         res.json(setResponse(res, msg, contextOut));
