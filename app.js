@@ -114,9 +114,11 @@ function callFAQ (query) {
             }, function (error, response, body){
               if (!error && response.statusCode == 200) {
                 let response = body;
+		console.log("FAQ Response:");
+		console.log(response);
                 resolve(response);
               }else{
-                console.error("QnA error -> ",error);
+                console.error("FAQ error -> ",error);
                 reject(error)
               }
             }
