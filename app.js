@@ -105,8 +105,10 @@ function setResponse(res,msg,contexts){
 
 function callQnA (query) {
   return new Promise((resolve, reject) => {
+	  reqUrl = qnaUrl + encodeURI(query);
+	  console.log(reqUrl);
     request({
-              url: qnaUrl + encodeURI(query),
+              url: reqUrl,
               method: "GET"
             }, function (error, response, body){
               if (!error && response.statusCode == 200) {
