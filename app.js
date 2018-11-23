@@ -49,8 +49,8 @@ app.post('/hrbotServer', function (req, res){
             })
    }else if(intent == "Default Fallback Intent"){
      query = req.body.queryResult.queryText;
-	console.log("Calling QnA URL for text - " + query);
-     callQnA(query).then((output)=>{msg = output}).catch((error)=>{msg = "Could not get any answer"});     
+	console.log("Calling FAQ URL for text - " + query);
+     callFAQ(query).then((output)=>{msg = output}).catch((error)=>{msg = "Could not get any answer"});     
    }else{
       if(contextsObject["phone_number"]){
          msg = "sahi jaa rha hai";
@@ -104,9 +104,9 @@ function setResponse(res,msg,contexts){
    return responseObj;
 }
 
-function callQnA (query) {
+function callFAQ (query) {
   return new Promise((resolve, reject) => {
-	  reqUrl = qnaUrl + encodeURI(query);
+	  reqUrl = faq_url + encodeURI(query);
 	  console.log(reqUrl);
     request({
               url: reqUrl,
