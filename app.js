@@ -109,6 +109,9 @@ app.post('/hrbotServer', function (req, res) {
                 msg = "Unable to validate your number. Please provide your number again.";
                 return res.json(setResponse(res, msg, contextOut));
             });
+        }else{
+            msg = "Please provide your number.";
+            return res.json(setResponse(res, msg, contextOut));
         }
     }
 });
