@@ -65,12 +65,12 @@ app.post('/hrbotServer', function (req, res) {
         query = req.body.queryResult.queryText;
         console.log("Calling FAQ URL for text - " + query);
         callFAQ(query).then((output) => {
-            msg = output ? output.substr(0, 15) : "Could not understand you";
-            console.log("in then:");
-            console.log(msg);
+            msg = output ? output.substr(0, 15) : "";
+            console.log("Fallback - ", msg);
             return res.json(setResponse(res, msg, contextOut));
         }).catch((error) => {
-            msg = "Could not get any answer";
+            msg = "";
+            console.log("Fallback Catch - ", msg);
             return res.json(setResponse(res, msg, contextOut));
         });
     } else {
