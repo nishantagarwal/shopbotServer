@@ -94,7 +94,7 @@ app.post('/hrbotServer', function (req, res) {
                             msg = "Types of interview are " + output["INTERVIEW_TYPES"];
                             break;
                         case "interviewResult":
-                            msg = "There result of interview is " + output["INTERVIEW_RESULT"];
+                            msg = "The result of interview is " + output["INTERVIEW_RESULT"];
                             break;
                         case "officeAddress":
                             msg = output["OFFICE_ADDRESS"];
