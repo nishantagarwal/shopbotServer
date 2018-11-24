@@ -7,7 +7,9 @@ const pg = require('pg');
 const client = new pg.Client('postgres://cnhxuafc:gK3OWnFKJe1vd3eBTqWwp4PhtLjZyhEI@pellefant.db.elephantsql.com:5432/cnhxuafc');
 client.connect();
 const faq_url = "https://faq-solr.herokuapp.com/search?query=";
-const rest_url = "https://tbdhrbot.herokuapp.com/candidate";
+const rest_url = "https://kamariya.herokuapp.com/candidate";
+
+var doc_types = { "aadhaar": ["a1", "a2"], "pan": ["p1", "p2"], "driving": ["d1", "d2"] }
 
 var app = express();
 app.use(bodyParser.json());
@@ -93,11 +95,35 @@ app.post('/hrbotServer', function (req, res) {
                         case "officeAddress":
                             msg = output["OFFICE_ADDRESS"];
                             break;
-                        case "requiredDocs":
-                            msg = output["REQUIRED_DOCS"];
-                            break;
                         case "docSubmissionTime":
-                            msg = output["SUBMISSION_TIME"];
+                            msg = "You can submit by " + output["SUBMISSION_TIME"];
+                            break;
+                        case "requiredDocs":
+                            user_docs = output["SUBMITTED_DOCS"] ? output["SUBMITTED_DOCS"] : "";
+                            user_docs_list = user_docs.split(",");
+                            missing_list = "";
+                            for (var key in doc_types) {
+                                if (!key in user_docs_list) {
+                                    missing_list += "," + key;
+                                }
+                            }
+                            if (missing_list.length != 0) {
+                                msg = "Required documents are - " + missing_list.substr(1);
+                            } else {
+                                msg = "No more documents required";
+                            }
+                            break;
+                        case "alternativeDocs":
+                            alternate_list = "";
+                            doc_name = req.body.queryResult.parameters["doc_name"];
+                            for(var item in doc_types[doc_name]){
+                                alternate_list += "," + item;
+                            }
+                            if (alternate_list.length != 0) {
+                                msg = "Alternative documents are - " + alternate_list.substr(1);
+                            } else {
+                                msg = doc_name + "is compulsory";
+                            }
                             break;
                         default:
                             msg = "Sorry we do not have this information.";
@@ -109,7 +135,7 @@ app.post('/hrbotServer', function (req, res) {
                 msg = "Unable to validate your number. Please provide your number again.";
                 return res.json(setResponse(res, msg, contextOut));
             });
-        }else{
+        } else {
             msg = "Please provide your number.";
             return res.json(setResponse(res, msg, contextOut));
         }
