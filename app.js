@@ -65,7 +65,7 @@ app.post('/hrbotServer', function (req, res) {
         query = req.body.queryResult.queryText;
         console.log("Calling FAQ URL for text - " + query);
         callFAQ(query).then((output) => {
-            msg = output ? output.substr(0, 15) : "";
+            msg = output ? output : "";
             console.log("Fallback - ", msg);
             if(msg.length > 0){
                 return res.json(setResponse(res, msg, contextOut));            
