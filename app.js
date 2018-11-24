@@ -7,7 +7,7 @@ const pg = require('pg');
 const client = new pg.Client('postgres://cnhxuafc:gK3OWnFKJe1vd3eBTqWwp4PhtLjZyhEI@pellefant.db.elephantsql.com:5432/cnhxuafc');
 client.connect();
 const faq_url = "https://faq-solr.herokuapp.com/search?query=";
-const rest_url = "https://kamariya.herokuapp.com/candidate";
+const rest_url = "https://tbdhrbot.herokuapp.com/candidate";
 
 var doc_types = { "aadhaar": ["a1", "a2"], "pan": ["p1", "p2"], "driving": ["d1", "d2"] }
 
