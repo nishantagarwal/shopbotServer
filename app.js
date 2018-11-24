@@ -116,13 +116,13 @@ app.post('/hrbotServer', function (req, res) {
                         case "alternativeDocs":
                             alternate_list = "";
                             doc_name = req.body.queryResult.parameters["doc_name"];
-                            for(var item in doc_types[doc_name]){
-                                alternate_list += "," + item;
+                            for (var item in doc_types[doc_name]) {
+                                alternate_list += "," + doc_types[doc_name][item];
                             }
                             if (alternate_list.length != 0) {
                                 msg = "Alternative documents are - " + alternate_list.substr(1);
                             } else {
-                                msg = doc_name + "is compulsory";
+                                msg = doc_name + " is compulsory";
                             }
                             break;
                         default:
