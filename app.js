@@ -67,7 +67,11 @@ app.post('/hrbotServer', function (req, res) {
         callFAQ(query).then((output) => {
             msg = output ? output.substr(0, 15) : "";
             console.log("Fallback - ", msg);
-            return res.json(setResponse(res, msg, contextOut));
+            if(msg.length > 0){
+                return res.json(setResponse(res, msg, contextOut));            
+            }else{
+                return false;
+            }
         }).catch((error) => {
             msg = "";
             console.log("Fallback Catch - ", msg);
