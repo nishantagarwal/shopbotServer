@@ -103,7 +103,7 @@ app.post('/hrbotServer', function (req, res) {
                             user_docs_list = user_docs.split(",");
                             missing_list = "";
                             for (var key in doc_types) {
-                                if (!key in user_docs_list) {
+                                if (user_docs_list.indexOf(key) < 0) {
                                     missing_list += "," + key;
                                 }
                             }
