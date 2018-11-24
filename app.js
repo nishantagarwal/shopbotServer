@@ -9,7 +9,7 @@ client.connect();
 const faq_url = "https://faq-solr.herokuapp.com/search?query=";
 const rest_url = "https://tbdhrbot.herokuapp.com/candidate";
 
-var doc_types = { "aadhaar": ["a1", "a2"], "pan": ["p1", "p2"], "driving": ["d1", "d2"] }
+var doc_types = { "aadhaar": [], "pan": ["aadhaar"], "driving": ["passport"] }
 
 var app = express();
 app.use(bodyParser.json());
